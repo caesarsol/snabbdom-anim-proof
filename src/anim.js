@@ -6,41 +6,31 @@ function animAttrs(oldVnode, vnode) {
   const elm = vnode.elm
   let oldAnimAttrs = oldVnode.data.anim
   let animAttrs = vnode.data.anim
-  const params = { ...defaultAnimParams, ...vnode.data.animParams }
 
-  if (!oldAnimAttrs && !animAttrs) return
   if (oldAnimAttrs === animAttrs) return
-  oldAnimAttrs = oldAnimAttrs || {}
-  animAttrs = animAttrs || {}
+  if (!animAttrs) return
 
-  const attrsToUpdate = []
-
-  // update modified attributes, add new attributes
-  for (let key in animAttrs) {
-    const cur = animAttrs[key]
-    const old = oldAnimAttrs[key]
-    if (old === cur) continue
-    attrsToUpdate.push({ key, value: cur })
-  }
-
-  // remove removed attributes
-  for (let key in oldAnimAttrs) {
-    if (key in animAttrs) continue
-    const zero = 0 // Should check for values other than numbers, such as colors
-    attrsToUpdate.push({ key, value: zero, then: () => { elm.removeAttribute(key) } })
-  }
-
-  if (attrsToUpdate.length === 0) return
+  const params = { ...defaultAnimParams, ...vnode.data.animParams }
 
   const transition = d3.select(elm)
     .transition()
     .duration(params.duration)
     .ease(params.ease)
 
-  attrsToUpdate.forEach(({ key, value, then }) => {
+  for (let key in animAttrs) {
+    const value = animAttrs[key]
     transition.attr(key, value)
-    if (then) transition.each('end', then)
-  })
+  }
+
+  // Only in DEV, checks that no attributes has been removed.
+  // This makes it possible to avoid ambiguity and to simplify code.
+  if (process.env.NODE_ENV !== 'production') {
+    for (let key in oldAnimAttrs) {
+      if (!animAttrs.hasOwnProperty(key)) {
+        throw new Error(`snabbdom-anim: Don't remove 'anim' attributes between diffs! It's a bad idea.`)
+      }
+    }
+  }
 }
 
 function removeAttrsAnim(vnode, done) {
@@ -49,16 +39,15 @@ function removeAttrsAnim(vnode, done) {
   if (!animAttrs) return
   const attrs = vnode.data.attrs
   const params = { ...defaultAnimParams, ...vnode.data.animParams }
+
   const transition = d3.select(elm)
     .transition()
     .duration(params.duration)
     .ease(params.ease)
 
   for (let key in animAttrs) {
-    const attr = animAttrs[key]
-    if (!Number.isFinite(attr)) continue
-    const zero = attrs[key]
-    transition.attr(key, zero)
+    const defaultAttr = attrs[key]
+    transition.attr(key, defaultAttr)
   }
 
   transition.each('end', done)
