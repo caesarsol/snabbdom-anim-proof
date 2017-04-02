@@ -26,8 +26,8 @@ function view(data) {
           y < 10 ? null :
           h('rect', {
             key: x,
-            attrs: { x: x * 15, width: 10, height: 0, fill: 'tomato', stroke: 'none', strokeWidth: 1 },
-            anim: { height: y, fill: y > 90 ? 'blue' : 'tomato' },
+            attrs: { x: x * 15, y: 100, width: 10, height: 0, fill: 'tomato', stroke: 'none', strokeWidth: 1 },
+            anim: { y: 100 - y, height: y, fill: y > 90 ? 'blue' : 'tomato' },
             animParams: { duration: 500, ease: 'cubic-in-out' },
           })
         ).filter(Boolean)
@@ -51,4 +51,4 @@ rerender()
 if (1)
   window.setInterval(() => {
     rerender()
-  }, 500)
+  }, 1500)

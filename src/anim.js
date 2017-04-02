@@ -43,18 +43,19 @@ function animAttrs(oldVnode, vnode) {
 
 function removeAttrsAnim(vnode, done) {
   const elm = vnode.elm
-  const attrs = vnode.data.anim
-  if (!attrs) return
+  const animAttrs = vnode.data.anim
+  const attrs = vnode.data.attrs
+  if (!animAttrs) return
   const params = vnode.data.animParams
   const transition = d3.select(elm)
     .transition()
     .duration(params.duration)
     .ease(params.ease)
 
-  for (let key in attrs) {
-    const attr = attrs[key]
-    if (!Number.isFinite(attr)) return
-    const zero = 0 // Should check for values other than numbers, such as colors
+  for (let key in animAttrs) {
+    const attr = animAttrs[key]
+    if (!Number.isFinite(attr)) continue
+    const zero = attrs[key]
     transition.attr(key, zero)
   }
 
