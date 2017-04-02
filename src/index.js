@@ -33,7 +33,6 @@ function view(data) {
               key: x,
               attrs: { x: x * 15, y: 100, width: 10, height: 0, fill: 'tomato', stroke: 'none' },
               anim: { y: 100 - y, height: y, fill: y > 90 ? 'blue' : 'tomato' },
-              animParams: { duration: 500, ease: 'cubic-in-out' },
             })
           ).filter(Boolean)
         ),
@@ -44,7 +43,7 @@ function view(data) {
               key: x,
               attrs: { cx: x * 15, cy: 150, r: 0, fill: 'transparent', opacity: 0.5, stroke: 'none' },
               anim: { r: y / 2, fill: colorScale(y) },
-              animParams: { duration: 500, ease: 'cubic-in-out' },
+              animParams: { duration: 800, ease: 'quad-out' },
             })
           ).filter(Boolean)
         ),
