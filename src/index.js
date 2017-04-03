@@ -105,7 +105,7 @@ function rerender() {
 
 rerender()
 
-if (0)
+if (1)
   window.setInterval(() => {
     rerender()
   }, 1500)
