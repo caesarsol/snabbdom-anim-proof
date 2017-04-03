@@ -23,6 +23,7 @@ function genData(key) {
 const colorScale = d3.scale.linear().domain([0, 1000]).range(['yellow', 'green'])
 
 const yScale = d3.scale.linear().domain([0, 1000]).range([100, 0])
+const yRadiusScale = d3.scale.linear().domain([0, 1000]).range([1, 50])
 const yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(5)
 
 function axisVerticalView(scale, { ticks, tickLength = 5, tickFormatting = x => x }) {
@@ -83,7 +84,7 @@ function view(data) {
             h('circle', {
               key: x,
               attrs: { cx: x * 15, cy: 150, r: 0, fill: 'transparent', opacity: 0.5, stroke: 'none' },
-              anim: { r: yScale(y) / 2, fill: colorScale(y) },
+              anim: { r: yRadiusScale(y), fill: colorScale(y) },
               animParams: { duration: 800, ease: 'quad-out' },
             })
           ).filter(Boolean)
